@@ -2,10 +2,11 @@ export interface Image {
   id: string;
   url: string;
   thumbnail_url?: string;
-  title: string;
+  title?: string;
   description?: string;
-  file_name: string;
-  file_size: number;
+  filename: string;
+  original_name: string;
+  size: number;
   mime_type: string;
   width?: number;
   height?: number;

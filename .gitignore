@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Database setup files (contains sensitive schema)
+supabase-setup.sql
+*.sql
