@@ -9,7 +9,7 @@ import SharedGallery from './SharedGallery';
 
 export default function UserDashboard() {
   const { user, userProfile, signOut, loading, profileLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState<'my-gallery' | 'shared-galleries'>('my-gallery');
+  const [activeTab, setActiveTab] = useState<'my-gallery' | 'community-gallery'>('my-gallery');
 
   if (loading) {
     return (
@@ -63,7 +63,7 @@ export default function UserDashboard() {
             Welcome back, {displayName}!
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto">
-            Manage your gallery, upload new images, and share collections with others.
+            Manage your gallery, upload new images, and explore the community.
           </p>
         </div>
 
@@ -89,14 +89,14 @@ export default function UserDashboard() {
                 My Gallery
               </button>
               <button 
-                onClick={() => setActiveTab('shared-galleries')}
+                onClick={() => setActiveTab('community-gallery')}
                 className={`border-b-2 py-2 px-1 text-sm font-medium ${
-                  activeTab === 'shared-galleries' 
+                  activeTab === 'community-gallery' 
                     ? 'border-blue-500 text-blue-400' 
                     : 'border-transparent text-gray-400 hover:text-gray-300'
                 }`}
               >
-                Shared Galleries
+                Community Gallery
               </button>
             </nav>
           </div>
