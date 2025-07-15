@@ -27,7 +27,12 @@ export default function UserDashboard() {
       <header className="bg-black/90 backdrop-blur-sm border-b border-gray-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-3">
+              <img 
+                src="/Gallery Logo.svg" 
+                alt="Gallery Logo" 
+                className="h-8 w-8"
+              />
               <h1 className="text-2xl font-bold text-white">
                 Gallery Dashboard
               </h1>
@@ -41,13 +46,10 @@ export default function UserDashboard() {
                     {displayName}
                   </span>
                 )}
-                <span className="text-gray-500 text-xs">
-                  {user?.email}
-                </span>
               </div>
               <button
                 onClick={signOut}
-                className="text-gray-400 hover:text-white px-4 py-2 rounded-md text-sm font-medium transition-colors border border-gray-700 hover:border-gray-600"
+                className="text-red-400 hover:text-red-300 px-4 py-2 rounded-md text-sm font-medium transition-colors border border-red-700 hover:border-red-600 bg-red-900/20 hover:bg-red-900/40"
               >
                 Sign Out
               </button>
@@ -80,7 +82,7 @@ export default function UserDashboard() {
             <nav className="-mb-px flex space-x-8">
               <button 
                 onClick={() => setActiveTab('my-gallery')}
-                className={`border-b-2 py-2 px-1 text-sm font-medium ${
+                className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
                   activeTab === 'my-gallery' 
                     ? 'border-blue-500 text-blue-400' 
                     : 'border-transparent text-gray-400 hover:text-gray-300'
@@ -90,7 +92,7 @@ export default function UserDashboard() {
               </button>
               <button 
                 onClick={() => setActiveTab('community-gallery')}
-                className={`border-b-2 py-2 px-1 text-sm font-medium ${
+                className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
                   activeTab === 'community-gallery' 
                     ? 'border-blue-500 text-blue-400' 
                     : 'border-transparent text-gray-400 hover:text-gray-300'

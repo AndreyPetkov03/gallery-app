@@ -35,6 +35,17 @@ body {
   outline-offset: 2px;
 }
 
+/* Remove focus outline for tab buttons */
+button:focus {
+  outline: none;
+}
+
+/* Specific focus styles for buttons that need them */
+button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
 /* Selection styles */
 ::selection {
   background: #ffffff;
