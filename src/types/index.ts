@@ -41,3 +41,39 @@ export interface ImageCardProps {
   onImageClick: (image: Image) => void;
   onImageDelete?: (imageId: string) => void;
 }
+
+export interface SharedGallery {
+  id: string;
+  name: string;
+  description?: string;
+  owner_id: string;
+  owner?: User;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+  image_count?: number;
+  cover_image_url?: string;
+}
+
+export interface SharedGalleryImage {
+  id: string;
+  gallery_id: string;
+  image_id: string;
+  image?: Image;
+  created_at: string;
+}
+
+export interface SharedGalleryMember {
+  id: string;
+  gallery_id: string;
+  user_id: string;
+  user?: User;
+  role: 'viewer' | 'contributor' | 'admin';
+  created_at: string;
+}
+
+export interface CreateSharedGalleryRequest {
+  name: string;
+  description?: string;
+  is_public: boolean;
+}
