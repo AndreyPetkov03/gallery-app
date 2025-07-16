@@ -13,11 +13,13 @@ export interface Image {
   created_at: string;
   updated_at: string;
   user_id: string;
+  user?: User;
 }
 
 export interface User {
   id: string;
   email: string;
+  username: string;
   full_name?: string;
   avatar_url?: string;
   created_at: string;
