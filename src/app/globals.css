@@ -51,3 +51,23 @@ button:focus-visible {
   background: #ffffff;
   color: #000000;
 }
+
+/* Cursor styles for interactive elements */
+button, 
+[role="button"], 
+[onclick], 
+.cursor-pointer,
+a,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  cursor: pointer;
+}
+
+/* Ensure clickable elements have pointer cursor */
+button:hover,
+[role="button"]:hover,
+[onclick]:hover,
+.cursor-pointer:hover {
+  cursor: pointer;
+}

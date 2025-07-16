@@ -94,7 +94,7 @@ export default function CommunityGallery() {
             return (
               <div
                 key={image.id}
-                className="bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-800/50 overflow-hidden group hover:border-gray-700/50 transition-all duration-200"
+                className="bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-800/50 overflow-hidden group hover:border-gray-700/50 transition-all duration-200 cursor-pointer"
               >
                 <div className="aspect-square relative overflow-hidden">
                   <img

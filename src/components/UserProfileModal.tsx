@@ -103,7 +103,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                 {userImages.map((image) => (
                   <div
                     key={image.id}
-                    className="aspect-square relative overflow-hidden rounded-lg bg-gray-800 group hover:scale-105 transition-transform duration-200"
+                    className="aspect-square relative overflow-hidden rounded-lg bg-gray-800 group hover:scale-105 transition-transform duration-200 cursor-pointer"
                   >
                     <img
                       src={image.url}
