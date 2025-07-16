@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthProvider';
 import LoadingSpinner from './LoadingSpinner';
-import { Image } from '@/types';
+import { Image } from '../types';
 
 export default function ImageGallery() {
   const { user } = useAuth();

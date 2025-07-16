@@ -1,11 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthProvider';
 import LoadingSpinner from './LoadingSpinner';
 
-export default function ImageUpload() {
+interface ImageUploadProps {
+  onUploadSuccess?: () => void;
+}
+
+export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
   const { user } = useAuth();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +60,11 @@ export default function ImageUpload() {
 
       setSuccess('Image uploaded successfully!');
       event.target.value = '';
+      
+      // Call the success callback if provided
+      if (onUploadSuccess) {
+        onUploadSuccess();
+      }
       
     } catch (error: any) {
       setError(error.message);

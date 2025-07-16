@@ -6,10 +6,15 @@ import LoadingSpinner from './LoadingSpinner';
 import ImageUpload from './ImageUpload';
 import ImageGallery from './ImageGallery';
 import SharedGallery from './SharedGallery';
+import UserAvatar from './UserAvatar';
+import UserProfileModal from './UserProfileModal';
+import UploadModal from './UploadModal';
 
 export default function UserDashboard() {
   const { user, userProfile, signOut, loading, profileLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'my-gallery' | 'community-gallery'>('my-gallery');
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   if (loading) {
     return (
@@ -19,7 +24,7 @@ export default function UserDashboard() {
     );
   }
 
-  const displayName = userProfile?.full_name || user?.email?.split('@')[0] || 'User';
+  const displayName = userProfile?.username || userProfile?.full_name || user?.email?.split('@')[0] || 'User';
 
   return (
     <div className="min-h-screen">
@@ -42,9 +47,17 @@ export default function UserDashboard() {
                 {profileLoading ? (
                   <LoadingSpinner size="sm" />
                 ) : (
-                  <span className="text-gray-300 text-sm">
-                    {displayName}
-                  </span>
+                  <>
+                    <button
+                      onClick={() => setShowProfileModal(true)}
+                      className="flex items-center space-x-2 hover:bg-gray-800/50 rounded-lg p-2 transition-colors"
+                    >
+                      <UserAvatar username={displayName} size="sm" />
+                      <span className="text-gray-300 text-sm">
+                        {displayName}
+                      </span>
+                    </button>
+                  </>
                 )}
               </div>
               <button
@@ -66,39 +79,39 @@ export default function UserDashboard() {
           </h2>
           <p className="text-gray-300 max-w-2xl mx-auto">
             Manage your gallery, upload new images, and explore the community.
-          </p>
-        </div>
-
-        {/* Upload Section - only show on My Gallery tab */}
-        {activeTab === 'my-gallery' && (
-          <div className="mb-8">
-            <ImageUpload />
-          </div>
-        )}
+          </p>        </div>
 
         {/* Gallery Tabs */}
         <div className="mb-6">
           <div className="border-b border-gray-800">
-            <nav className="-mb-px flex space-x-8">
-              <button 
-                onClick={() => setActiveTab('my-gallery')}
-                className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
-                  activeTab === 'my-gallery' 
-                    ? 'border-blue-500 text-blue-400' 
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
-                }`}
+            <nav className="-mb-px flex justify-between items-center">
+              <div className="flex space-x-8">
+                <button 
+                  onClick={() => setActiveTab('my-gallery')}
+                  className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
+                    activeTab === 'my-gallery' 
+                      ? 'border-blue-500 text-blue-400' 
+                      : 'border-transparent text-gray-400 hover:text-gray-300'
+                  }`}
+                >
+                  My Gallery
+                </button>
+                <button 
+                  onClick={() => setActiveTab('community-gallery')}
+                  className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
+                    activeTab === 'community-gallery' 
+                      ? 'border-blue-500 text-blue-400' 
+                      : 'border-transparent text-gray-400 hover:text-gray-300'
+                  }`}
+                >
+                  Community Gallery
+                </button>
+              </div>
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-md text-sm font-medium transition-colors"
               >
-                My Gallery
-              </button>
-              <button 
-                onClick={() => setActiveTab('community-gallery')}
-                className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
-                  activeTab === 'community-gallery' 
-                    ? 'border-blue-500 text-blue-400' 
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
-                }`}
-              >
-                Community Gallery
+                Upload Image
               </button>
             </nav>
           </div>
@@ -116,6 +129,22 @@ export default function UserDashboard() {
           )}
         </div>
       </main>
+
+      {/* User Profile Modal */}
+      <UserProfileModal 
+        isOpen={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
+
+      {/* Upload Modal */}
+      <UploadModal 
+        isOpen={showUploadModal} 
+        onClose={() => setShowUploadModal(false)} 
+        onUploadSuccess={() => {
+          // Refresh the gallery after upload
+          window.location.reload();
+        }}
+      />
     </div>
   );
 }

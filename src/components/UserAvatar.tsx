@@ -8,7 +8,7 @@ export default function UserAvatar({ username, size = 'md', className = '' }: Us
   const sizeClasses = {
     sm: 'w-6 h-6 text-xs',
     md: 'w-8 h-8 text-sm',
-    lg: 'w-12 h-12 text-base'
+    lg: 'w-16 h-16 text-xl'
   };
 
   // Generate a consistent color based on username
