@@ -76,9 +76,13 @@ export default function PublicUserProfileModal({ isOpen, onClose, user }: Public
             {user.full_name && user.full_name !== username && (
               <p className="text-gray-400 text-sm mb-2">{user.full_name}</p>
             )}
-            <p className="text-gray-500 text-sm">{user.email}</p>
-            <div className="text-gray-400 text-xs mt-2">
-              Member since {new Date(user.created_at).toLocaleDateString()}
+            {user.created_at && (
+              <div className="text-gray-400 text-xs mt-2">
+                Member since {new Date(user.created_at).toLocaleDateString()}
+              </div>
+            )}
+            <div className="text-gray-400 text-xs mt-1">
+              {userImages.length} image{userImages.length !== 1 ? 's' : ''} uploaded
             </div>
           </div>
 
@@ -86,9 +90,6 @@ export default function PublicUserProfileModal({ isOpen, onClose, user }: Public
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-lg font-semibold text-white">{username}'s Gallery</h4>
-              <span className="text-sm text-gray-400">
-                {userImages.length} image{userImages.length !== 1 ? 's' : ''}
-              </span>
             </div>
 
             {imagesLoading ? (

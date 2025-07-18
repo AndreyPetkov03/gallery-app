@@ -93,7 +93,8 @@ export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
             id,
             username,
             full_name,
-            email
+            email,
+            created_at
           )
         `)
         .order('created_at', { ascending: false });
