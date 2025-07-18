@@ -1,24 +1,86 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useAuth } from './AuthProvider';
 import LoadingSpinner from './LoadingSpinner';
-import ImageUpload from './ImageUpload';
 import ImageGallery from './ImageGallery';
 import SharedGallery from './SharedGallery';
 import UserAvatar from './UserAvatar';
 import UserProfileModal from './UserProfileModal';
 import PublicUserProfileModal from './PublicUserProfileModal';
-import UploadModal from './UploadModal';
 import { User } from '../types';
+import { supabase } from '../lib/supabase';
 
 export default function UserDashboard() {
   const { user, userProfile, signOut, loading, profileLoading } = useAuth();
-  const [activeTab, setActiveTab] = useState<'my-gallery' | 'community-gallery'>('my-gallery');
+  const [activeTab, setActiveTab] = useState<'my-gallery' | 'community-gallery'>('community-gallery');
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [showPublicProfileModal, setShowPublicProfileModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    setUploading(true);
+    setError(null);
+
+    try {
+      // Create unique filename with user folder structure
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
+      
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('gallery-images')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('gallery-images')
+        .getPublicUrl(fileName);
+
+      // Save image metadata to database
+      const { error: dbError } = await supabase
+        .from('images')
+        .insert({
+          user_id: user.id,
+          filename: fileName,
+          original_name: file.name,
+          url: publicUrl,
+          size: file.size,
+          mime_type: file.type
+        });
+
+      if (dbError) {
+        throw dbError;
+      }
+
+      // Refresh the page to show new image
+      window.location.reload();
+      
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error: any) {
+      console.error('Error uploading image:', error);
+      setError(error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleUserClick = (clickedUser: User) => {
     setSelectedUser(clickedUser);
@@ -98,34 +160,26 @@ export default function UserDashboard() {
         {/* Gallery Tabs */}
         <div className="mb-6">
           <div className="border-b border-gray-800">
-            <nav className="-mb-px flex justify-between items-center">
-              <div className="flex space-x-8">
-                <button 
-                  onClick={() => setActiveTab('my-gallery')}
-                  className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
-                    activeTab === 'my-gallery' 
-                      ? 'border-blue-500 text-blue-400' 
-                      : 'border-transparent text-gray-400 hover:text-gray-300'
-                  }`}
-                >
-                  My Gallery
-                </button>
-                <button 
-                  onClick={() => setActiveTab('community-gallery')}
-                  className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
-                    activeTab === 'community-gallery' 
-                      ? 'border-blue-500 text-blue-400' 
-                      : 'border-transparent text-gray-400 hover:text-gray-300'
-                  }`}
-                >
-                  Community Gallery
-                </button>
-              </div>
-              <button
-                onClick={() => setShowUploadModal(true)}
-                className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-md text-sm font-medium transition-colors"
+            <nav className="-mb-px flex space-x-8">
+              <button 
+                onClick={() => setActiveTab('community-gallery')}
+                className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
+                  activeTab === 'community-gallery' 
+                    ? 'border-blue-500 text-blue-400' 
+                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                }`}
               >
-                Upload Image
+                Community Gallery
+              </button>
+              <button 
+                onClick={() => setActiveTab('my-gallery')}
+                className={`border-b-2 py-2 px-1 text-sm font-medium transition-colors focus:outline-none ${
+                  activeTab === 'my-gallery' 
+                    ? 'border-blue-500 text-blue-400' 
+                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                }`}
+              >
+                My Gallery
               </button>
             </nav>
           </div>
@@ -133,13 +187,54 @@ export default function UserDashboard() {
 
         {/* Tab Content */}
         <div className="bg-gray-900/80 backdrop-blur-sm rounded-lg p-6 border border-gray-800/50">
-          {activeTab === 'my-gallery' ? (
+          {/* Hidden file input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          
+          {activeTab === 'community-gallery' ? (
+            <SharedGallery onUserClick={handleUserClick} />
+          ) : (
             <>
-              <h3 className="text-lg font-semibold text-white mb-4">Your Gallery</h3>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-xl font-semibold text-white">My Gallery</h3>
+                  <p className="text-gray-400 text-sm mt-1">
+                    Manage your images here
+                  </p>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={handleUploadClick}
+                    disabled={uploading}
+                    className="bg-white hover:bg-gray-200 disabled:bg-gray-300 disabled:cursor-not-allowed text-black px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2"
+                  >
+                    {uploading ? (
+                      <LoadingSpinner size="sm" />
+                    ) : (
+                      <img 
+                        src="/uploadFile.svg" 
+                        alt="Upload" 
+                        className="w-4 h-4"
+                      />
+                    )}
+                    <span>{uploading ? 'Uploading...' : 'Upload Image'}</span>
+                  </button>
+                </div>
+              </div>
+              
+              {error && (
+                <div className="bg-red-900/20 border border-red-800/50 text-red-200 p-4 rounded-md mb-6">
+                  Error uploading image: {error}
+                </div>
+              )}
+              
               <ImageGallery />
             </>
-          ) : (
-            <SharedGallery onUserClick={handleUserClick} />
           )}
         </div>
       </main>
@@ -148,16 +243,6 @@ export default function UserDashboard() {
       <UserProfileModal 
         isOpen={showProfileModal} 
         onClose={() => setShowProfileModal(false)} 
-      />
-
-      {/* Upload Modal */}
-      <UploadModal 
-        isOpen={showUploadModal} 
-        onClose={() => setShowUploadModal(false)} 
-        onUploadSuccess={() => {
-          // Refresh the gallery after upload
-          window.location.reload();
-        }}
       />
 
       {/* Public User Profile Modal */}
