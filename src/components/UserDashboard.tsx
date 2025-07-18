@@ -8,13 +8,27 @@ import ImageGallery from './ImageGallery';
 import SharedGallery from './SharedGallery';
 import UserAvatar from './UserAvatar';
 import UserProfileModal from './UserProfileModal';
+import PublicUserProfileModal from './PublicUserProfileModal';
 import UploadModal from './UploadModal';
+import { User } from '../types';
 
 export default function UserDashboard() {
   const { user, userProfile, signOut, loading, profileLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'my-gallery' | 'community-gallery'>('my-gallery');
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showPublicProfileModal, setShowPublicProfileModal] = useState(false);
+
+  const handleUserClick = (clickedUser: User) => {
+    setSelectedUser(clickedUser);
+    setShowPublicProfileModal(true);
+  };
+
+  const closePublicProfileModal = () => {
+    setShowPublicProfileModal(false);
+    setSelectedUser(null);
+  };
 
   if (loading) {
     return (
@@ -39,7 +53,7 @@ export default function UserDashboard() {
                 className="h-8 w-8"
               />
               <h1 className="text-2xl font-bold text-white">
-                Gallery Dashboard
+                The Gallery
               </h1>
             </div>
             <div className="flex items-center space-x-4">
@@ -125,7 +139,7 @@ export default function UserDashboard() {
               <ImageGallery />
             </>
           ) : (
-            <SharedGallery />
+            <SharedGallery onUserClick={handleUserClick} />
           )}
         </div>
       </main>
@@ -144,6 +158,13 @@ export default function UserDashboard() {
           // Refresh the gallery after upload
           window.location.reload();
         }}
+      />
+
+      {/* Public User Profile Modal */}
+      <PublicUserProfileModal
+        isOpen={showPublicProfileModal}
+        onClose={closePublicProfileModal}
+        user={selectedUser}
       />
     </div>
   );

@@ -5,9 +5,13 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthProvider';
 import LoadingSpinner from './LoadingSpinner';
 import UserAvatar from './UserAvatar';
-import { Image } from '../types';
+import { Image, User } from '../types';
 
-export default function CommunityGallery() {
+interface SharedGalleryProps {
+  onUserClick: (user: User) => void;
+}
+
+export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
   const { user } = useAuth();
   const [images, setImages] = useState<Image[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,10 +118,14 @@ export default function CommunityGallery() {
                   </div>
                 </div>
                 <div className="p-3">
-                  <div className="flex items-center space-x-2">
+                  <div 
+                    className="flex items-center space-x-2 cursor-pointer hover:bg-gray-800/50 rounded p-1 -m-1 transition-colors"
+                    onClick={() => image.user && onUserClick(image.user)}
+                    title={`View ${username}'s profile`}
+                  >
                     <UserAvatar username={username} size="sm" />
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm font-medium truncate">
+                      <p className="text-white text-sm font-medium truncate hover:text-blue-300 transition-colors">
                         {username}
                       </p>
                       <p className="text-gray-400 text-xs">
