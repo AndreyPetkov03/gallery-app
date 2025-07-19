@@ -149,7 +149,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                     className="p-1 hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
                     title="Save changes"
                   >
-                    <img src="/checkmark.svg" alt="Save" className="w-5 h-5" />
+                    <img src="/checkmark-thin.svg" alt="Save" className="w-5 h-5" />
                   </button>
                   <button
                     onClick={handleCancelEdit}
