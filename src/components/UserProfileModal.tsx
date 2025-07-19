@@ -157,9 +157,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
                     className="p-1 hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
                     title="Cancel edit"
                   >
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <img src="/cancel.svg" alt="Cancel" className="w-5 h-5" />
                   </button>
                 </div>
               ) : (
@@ -185,6 +183,14 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
 
             {userProfile?.full_name && userProfile.full_name !== username && (
               <p className="text-gray-400 text-sm mb-2">{userProfile.full_name}</p>
+            )}
+            {user?.created_at && (
+              <div className="text-gray-400 text-xs mb-1">
+                Member since {new Date(user.created_at).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long'
+                })}
+              </div>
             )}
             <div className="text-gray-400 text-xs mt-1">
               {userImages.length} image{userImages.length !== 1 ? 's' : ''} uploaded
