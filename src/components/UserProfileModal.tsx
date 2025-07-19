@@ -16,6 +16,10 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
   const { user, userProfile, profileLoading } = useAuth();
   const [userImages, setUserImages] = useState<Image[]>([]);
   const [imagesLoading, setImagesLoading] = useState(true);
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const [editedUsername, setEditedUsername] = useState('');
+  const [isUpdatingUsername, setIsUpdatingUsername] = useState(false);
+  const [updateError, setUpdateError] = useState<string | null>(null);
 
   const fetchUserImages = async () => {
     if (!user) return;
@@ -36,6 +40,43 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
     } finally {
       setImagesLoading(false);
     }
+  };
+
+  const handleEditUsername = () => {
+    setEditedUsername(username);
+    setIsEditingUsername(true);
+    setUpdateError(null);
+  };
+
+  const handleSaveUsername = async () => {
+    if (!user || !editedUsername.trim()) return;
+
+    setIsUpdatingUsername(true);
+    setUpdateError(null);
+
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ username: editedUsername.trim() })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      setIsEditingUsername(false);
+      // Refresh the page to update the username everywhere
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error updating username:', error);
+      setUpdateError(error.message);
+    } finally {
+      setIsUpdatingUsername(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingUsername(false);
+    setEditedUsername('');
+    setUpdateError(null);
   };
 
   useEffect(() => {
@@ -69,7 +110,65 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
           {/* Profile Header */}
           <div className="flex flex-col items-center mb-8">
             <UserAvatar username={username} size="lg" className="mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-2">{username}</h3>
+            
+            {/* Username with edit functionality */}
+            <div className="flex items-center gap-2 mb-2">
+              {isEditingUsername ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={editedUsername}
+                    onChange={(e) => setEditedUsername(e.target.value)}
+                    className="text-2xl font-bold text-white bg-gray-800 border border-gray-600 rounded px-2 py-1 text-center min-w-[200px]"
+                    autoFocus
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSaveUsername();
+                      } else if (e.key === 'Escape') {
+                        handleCancelEdit();
+                      }
+                    }}
+                  />
+                  <button
+                    onClick={handleSaveUsername}
+                    disabled={isUpdatingUsername || !editedUsername.trim()}
+                    className="p-1 hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
+                    title="Save changes"
+                  >
+                    <img src="/checkmark.svg" alt="Save" className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={handleCancelEdit}
+                    disabled={isUpdatingUsername}
+                    className="p-1 hover:bg-gray-700 rounded transition-colors disabled:opacity-50"
+                    title="Cancel edit"
+                  >
+                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <h3 className="text-2xl font-bold text-white">{username}</h3>
+                  <button
+                    onClick={handleEditUsername}
+                    className="p-1 hover:bg-gray-700 rounded transition-colors opacity-60 hover:opacity-100"
+                    title="Edit username"
+                  >
+                    <img src="/edit.svg" alt="Edit" className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Error message */}
+            {updateError && (
+              <div className="text-red-400 text-sm mb-2 text-center">
+                {updateError}
+              </div>
+            )}
+
             {userProfile?.full_name && userProfile.full_name !== username && (
               <p className="text-gray-400 text-sm mb-2">{userProfile.full_name}</p>
             )}
