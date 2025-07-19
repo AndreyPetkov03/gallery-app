@@ -79,6 +79,14 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
     setUpdateError(null);
   };
 
+  const handleClose = () => {
+    // Cancel any ongoing edit when closing the modal
+    if (isEditingUsername) {
+      handleCancelEdit();
+    }
+    onClose();
+  };
+
   useEffect(() => {
     if (isOpen && user) {
       fetchUserImages();
@@ -90,13 +98,19 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
   const username = userProfile?.username || userProfile?.full_name || user?.email?.split('@')[0] || 'User';
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg border border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={handleClose}
+    >
+      <div 
+        className="bg-gray-900 rounded-lg border border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-800">
           <h2 className="text-xl font-semibold text-white">User Profile</h2>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-gray-400 hover:text-white transition-colors"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
