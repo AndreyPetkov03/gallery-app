@@ -117,19 +117,6 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
     }
   };
 
-  const handleCancel = () => {
-    setSelectedFile(null);
-    setPreviewUrl(null);
-    setTitle('');
-    setDescription('');
-    setError(null);
-    setSuccess(null);
-    
-    // Clear file input
-    const fileInput = document.getElementById('dropzone-file') as HTMLInputElement;
-    if (fileInput) fileInput.value = '';
-  };
-
   return (
     <div className="space-y-4">
       {error && (
@@ -226,12 +213,12 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
         <p className="text-xs text-gray-500 mt-1">{description.length}/500 characters</p>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex space-x-3 pt-2">
+      {/* Action Button */}
+      <div className="pt-2">
         <button
           onClick={handleUpload}
           disabled={uploading || !title.trim() || !description.trim() || !selectedFile}
-          className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-md transition-colors flex items-center justify-center"
+          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-md transition-colors flex items-center justify-center"
         >
           {uploading ? (
             <>
@@ -241,13 +228,6 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
           ) : (
             'Upload'
           )}
-        </button>
-        <button
-          onClick={handleCancel}
-          disabled={uploading}
-          className="px-4 py-2 text-gray-400 hover:text-white border border-gray-600 hover:border-gray-500 rounded-md transition-colors disabled:opacity-50"
-        >
-          Cancel
         </button>
       </div>
     </div>
