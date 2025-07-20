@@ -20,6 +20,7 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
   const [editedUsername, setEditedUsername] = useState('');
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   const fetchUserImages = async () => {
     if (!user) return;
@@ -79,6 +80,70 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
     setUpdateError(null);
   };
 
+  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUpdateError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setUpdateError('Image must be less than 5MB');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    setUpdateError(null);
+
+    try {
+      // Delete old avatar if it exists
+      if (userProfile?.avatar_url) {
+        const oldFileName = userProfile.avatar_url.split('/').pop();
+        if (oldFileName) {
+          await supabase.storage
+            .from('gallery-profile-images')
+            .remove([`${user.id}/${oldFileName}`]);
+        }
+      }
+
+      // Upload new avatar
+      const fileExt = file.name.split('.').pop();
+      const fileName = `avatar-${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('gallery-profile-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('gallery-profile-images')
+        .getPublicUrl(filePath);
+
+      // Update user profile with new avatar URL
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ avatar_url: publicUrl })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      // Refresh the page to update the avatar everywhere
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error uploading avatar:', error);
+      setUpdateError(error.message);
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   const handleClose = () => {
     // Cancel any ongoing edit when closing the modal
     if (isEditingUsername) {
@@ -123,7 +188,34 @@ export default function UserProfileModal({ isOpen, onClose }: UserProfileModalPr
         <div className="p-6 overflow-y-auto max-h-[80vh]">
           {/* Profile Header */}
           <div className="flex flex-col items-center mb-8">
-            <UserAvatar username={username} size="lg" className="mb-4" />
+            {/* Avatar with upload functionality */}
+            <div className="relative mb-4">
+              <UserAvatar 
+                username={username} 
+                avatarUrl={userProfile?.avatar_url}
+                size="lg" 
+              />
+              <label 
+                htmlFor="avatar-upload"
+                className="absolute -bottom-1 -right-1 bg-gray-700 hover:bg-gray-600 rounded-full p-2 cursor-pointer transition-colors shadow-lg"
+                title="Change profile picture"
+              >
+                <img src="/edit.svg" alt="Change avatar" className="w-3 h-3" />
+              </label>
+              <input
+                id="avatar-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                disabled={isUploadingAvatar}
+                className="hidden"
+              />
+              {isUploadingAvatar && (
+                <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
+                  <LoadingSpinner size="sm" />
+                </div>
+              )}
+            </div>
             
             {/* Username with edit functionality */}
             <div className="flex items-center gap-2 mb-2">

@@ -128,7 +128,11 @@ export default function UserDashboard() {
                       onClick={() => setShowProfileModal(true)}
                       className="flex items-center space-x-2 hover:bg-gray-800/50 rounded-lg p-2 transition-colors"
                     >
-                      <UserAvatar username={displayName} size="sm" />
+                      <UserAvatar 
+                        username={displayName} 
+                        avatarUrl={userProfile?.avatar_url}
+                        size="sm" 
+                      />
                       <span className="text-gray-300 text-sm">
                         {displayName}
                       </span>

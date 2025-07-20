@@ -94,6 +94,7 @@ export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
             username,
             full_name,
             email,
+            avatar_url,
             created_at
           )
         `)
@@ -217,7 +218,11 @@ export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
                     onClick={() => image.user && onUserClick(image.user)}
                     title={`View ${username}'s profile`}
                   >
-                    <UserAvatar username={username} size="sm" />
+                    <UserAvatar 
+                      username={username} 
+                      avatarUrl={image.user?.avatar_url}
+                      size="sm" 
+                    />
                     <div className="flex-1 min-w-0">
                       <p className="text-white text-sm font-medium truncate hover:text-blue-300 transition-colors">
                         {username}

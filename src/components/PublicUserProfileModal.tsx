@@ -71,7 +71,12 @@ export default function PublicUserProfileModal({ isOpen, onClose, user }: Public
         <div className="p-6 overflow-y-auto max-h-[80vh]">
           {/* Profile Header */}
           <div className="flex flex-col items-center mb-8">
-            <UserAvatar username={username} size="lg" className="mb-4" />
+            <UserAvatar 
+              username={username} 
+              avatarUrl={user.avatar_url}
+              size="lg" 
+              className="mb-4" 
+            />
             <h3 className="text-2xl font-bold text-white mb-2">{username}</h3>
             {user.full_name && user.full_name !== username && (
               <p className="text-gray-400 text-sm mb-2">{user.full_name}</p>

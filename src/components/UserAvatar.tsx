@@ -1,10 +1,11 @@
 interface UserAvatarProps {
   username: string;
+  avatarUrl?: string | null;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
 
-export default function UserAvatar({ username, size = 'md', className = '' }: UserAvatarProps) {
+export default function UserAvatar({ username, avatarUrl, size = 'md', className = '' }: UserAvatarProps) {
   const sizeClasses = {
     sm: 'w-6 h-6 text-xs',
     md: 'w-8 h-8 text-sm',
@@ -37,6 +38,20 @@ export default function UserAvatar({ username, size = 'md', className = '' }: Us
   const firstLetter = username.charAt(0).toUpperCase();
   const gradientClass = generateGradient(username);
 
+  // If we have a custom avatar URL, use it
+  if (avatarUrl) {
+    return (
+      <div className={`${sizeClasses[size]} rounded-full overflow-hidden shadow-lg ${className}`}>
+        <img
+          src={avatarUrl}
+          alt={`${username}'s avatar`}
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
+  }
+
+  // Otherwise, use the generated gradient avatar
   return (
     <div 
       className={`
