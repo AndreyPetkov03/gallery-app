@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthProvider';
 import LoadingSpinner from './LoadingSpinner';
@@ -9,76 +9,13 @@ import { Image, User } from '../types';
 
 interface SharedGalleryProps {
   onUserClick: (user: User) => void;
+  onUploadClick?: () => void;
 }
 
-export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
+export default function CommunityGallery({ onUserClick, onUploadClick }: SharedGalleryProps) {
   const { user } = useAuth();
   const [images, setImages] = useState<Image[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file || !user) return;
-
-    setUploading(true);
-    setError(null);
-
-    try {
-      // Create unique filename with user folder structure
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user.id}/${Date.now()}.${fileExt}`;
-      
-      // Upload to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from('gallery-images')
-        .upload(fileName, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('gallery-images')
-        .getPublicUrl(fileName);
-
-      // Save image metadata to database
-      const { error: dbError } = await supabase
-        .from('images')
-        .insert({
-          user_id: user.id,
-          filename: fileName,
-          original_name: file.name,
-          url: publicUrl,
-          size: file.size,
-          mime_type: file.type
-        });
-
-      if (dbError) {
-        throw dbError;
-      }
-
-      // Refresh the gallery
-      fetchCommunityImages();
-      
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    } catch (error: any) {
-      console.error('Error uploading image:', error);
-      setError(error.message);
-    } finally {
-      setUploading(false);
-    }
-  };
 
   const fetchCommunityImages = async () => {
     try {
@@ -106,7 +43,6 @@ export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
       setImages(data || []);
     } catch (error: any) {
       console.error('Error fetching community images:', error);
-      setError(error.message);
     } finally {
       setLoading(false);
     }
@@ -124,25 +60,8 @@ export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
     );
   }
 
-  if (error) {
-    return (
-      <div className="bg-red-900/20 border border-red-800/50 text-red-200 p-4 rounded-md">
-        Error loading community gallery: {error}
-      </div>
-    );
-  }
-
   return (
     <div>
-      {/* Hidden file input */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleFileUpload}
-        className="hidden"
-      />
-      
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-semibold text-white">Community Gallery</h3>
@@ -150,31 +69,22 @@ export default function CommunityGallery({ onUserClick }: SharedGalleryProps) {
             Discover images shared by the community
           </p>
         </div>
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={handleUploadClick}
-            disabled={uploading}
-            className="bg-white hover:bg-gray-200 disabled:bg-gray-300 disabled:cursor-not-allowed text-black px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2"
-          >
-            {uploading ? (
-              <LoadingSpinner size="sm" />
-            ) : (
+        {onUploadClick && (
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={onUploadClick}
+              className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2"
+            >
               <img 
                 src="/uploadFile.svg" 
                 alt="Upload" 
                 className="w-4 h-4"
               />
-            )}
-            <span>{uploading ? 'Uploading...' : 'Upload Image'}</span>
-          </button>
-        </div>
+              <span>Upload Image</span>
+            </button>
+          </div>
+        )}
       </div>
-
-      {error && (
-        <div className="bg-red-900/20 border border-red-800/50 text-red-200 p-4 rounded-md mb-6">
-          Error uploading image: {error}
-        </div>
-      )}
 
       {images.length === 0 ? (
         <div className="text-center py-12">

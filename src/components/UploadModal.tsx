@@ -20,9 +20,9 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg border border-gray-800 max-w-2xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-gray-900 rounded-lg border border-gray-800 max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-800">
+        <div className="flex items-center justify-between p-6 border-b border-gray-800 flex-shrink-0">
           <h2 className="text-xl font-semibold text-white">Upload Image</h2>
           <button
             onClick={onClose}
@@ -34,8 +34,8 @@ export default function UploadModal({ isOpen, onClose, onUploadSuccess }: Upload
           </button>
         </div>
 
-        {/* Upload Content */}
-        <div className="p-6">
+        {/* Upload Content - Scrollable */}
+        <div className="p-6 overflow-y-auto flex-1">
           <ImageUpload onUploadSuccess={handleUploadSuccess} />
         </div>
       </div>
