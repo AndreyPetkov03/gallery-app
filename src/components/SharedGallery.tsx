@@ -62,25 +62,26 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3 sm:gap-0">
         <div>
-          <h3 className="text-xl font-semibold text-white">Community Gallery</h3>
-          <p className="text-gray-400 text-sm mt-1">
+          <h3 className="text-lg sm:text-xl font-semibold text-white">Community Gallery</h3>
+          <p className="text-gray-400 text-xs sm:text-sm mt-1">
             Discover images shared by the community
           </p>
         </div>
         {onUploadClick && (
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center">
             <button
               onClick={onUploadClick}
-              className="bg-white hover:bg-gray-200 text-black px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-2"
+              className="bg-white hover:bg-gray-200 text-black px-3 py-1.5 sm:px-4 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition-colors flex items-center space-x-1 sm:space-x-2"
             >
               <img 
                 src="/uploadFile.svg" 
                 alt="Upload" 
-                className="w-4 h-4"
+                className="w-3 h-3 sm:w-4 sm:h-4"
               />
-              <span>Upload Image</span>
+              <span className="hidden sm:inline">Upload Image</span>
+              <span className="sm:hidden">Upload</span>
             </button>
           </div>
         )}
