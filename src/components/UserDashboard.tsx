@@ -46,14 +46,19 @@ export default function UserDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <img 
-                src="/Gallery Logo.svg" 
-                alt="Gallery Logo" 
-                className="h-8 w-8"
-              />
-              <h1 className="text-2xl font-bold text-white">
-                The Gallery
-              </h1>
+              <a 
+                href="/"
+                className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
+              >
+                <img 
+                  src="/Gallery Logo.svg" 
+                  alt="Gallery Logo" 
+                  className="h-8 w-8"
+                />
+                <h1 className="text-2xl font-bold text-white">
+                  The Gallery
+                </h1>
+              </a>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">

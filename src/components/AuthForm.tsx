@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import LoadingSpinner from './LoadingSpinner';
 
 interface AuthFormProps {
   onSuccess?: () => void;
+  onBack?: () => void;
 }
 
-export default function AuthForm({ onSuccess }: AuthFormProps) {
+export default function AuthForm({ onSuccess, onBack }: AuthFormProps) {
+  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +38,12 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
         if (error) throw error;
       }
       
-      onSuccess?.();
+      // Redirect to dashboard on successful auth
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/dashboard');
+      }
     } catch (error: any) {
       setError(error.message);
     } finally {
@@ -46,6 +54,20 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="bg-gray-900/80 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-gray-800/50 w-full max-w-md">
+        {onBack && (
+          <div className="mb-4">
+            <button
+              onClick={onBack}
+              className="text-gray-400 hover:text-white transition-colors flex items-center space-x-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Back to Gallery</span>
+            </button>
+          </div>
+        )}
+        
         <h2 className="text-2xl font-bold text-white mb-6 text-center">
           {isLogin ? 'Sign In' : 'Sign Up'}
         </h2>

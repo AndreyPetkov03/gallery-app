@@ -1,12 +1,12 @@
 import GradientBackground from "@/components/GradientBackground";
 import { AuthProvider } from "@/components/AuthProvider";
-import PublicGallery from "@/components/PublicGallery";
+import AuthenticatedApp from "@/components/AuthenticatedApp";
 
-export default function Home() {
+export default function Dashboard() {
   return (
     <GradientBackground>
       <AuthProvider>
-        <PublicGallery />
+        <AuthenticatedApp />
       </AuthProvider>
     </GradientBackground>
   );
