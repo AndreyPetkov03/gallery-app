@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from './AuthProvider';
 import LoadingSpinner from './LoadingSpinner';
 import UserAvatar from './UserAvatar';
+import ImageDetailModal from './ImageDetailModal';
 import { Image, User } from '../types';
 
 interface SharedGalleryProps {
@@ -16,6 +17,7 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
   const { user } = useAuth();
   const [images, setImages] = useState<Image[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
   const fetchCommunityImages = async () => {
     try {
@@ -116,6 +118,7 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
               <div
                 key={image.id}
                 className="bg-gray-900/80 backdrop-blur-sm rounded-lg border border-gray-800/50 overflow-hidden group hover:border-gray-700/50 transition-all duration-200 cursor-pointer"
+                onClick={() => setSelectedImage(image)}
               >
                 <div className="aspect-square relative overflow-hidden">
                   <img
@@ -137,7 +140,10 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
                 <div className="p-3">
                   <div 
                     className="flex items-center space-x-2 cursor-pointer hover:bg-gray-800/50 rounded p-1 -m-1 transition-colors"
-                    onClick={() => image.user && onUserClick(image.user)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      image.user && onUserClick(image.user);
+                    }}
                     title={`View ${username}'s profile`}
                   >
                     <UserAvatar 
@@ -159,6 +165,15 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
             );
           })}
         </div>
+      )}
+
+      {/* Image Detail Modal */}
+      {selectedImage && (
+        <ImageDetailModal
+          image={selectedImage}
+          onClose={() => setSelectedImage(null)}
+          onUserClick={onUserClick}
+        />
       )}
     </div>
   );
