@@ -52,12 +52,8 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
 
       if (error) throw error;
 
-      console.log('Community images data:', data);
-      console.log('First image title:', data?.[0]?.title);
-      console.log('First image description:', data?.[0]?.description);
       setImages(data as any || []);
     } catch (error: any) {
-      console.error('Error fetching community images:', error);
     } finally {
       setLoading(false);
     }

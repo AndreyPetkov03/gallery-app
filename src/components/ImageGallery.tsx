@@ -26,8 +26,6 @@ export default function ImageGallery() {
         throw error;
       }
 
-      console.log('Personal gallery images:', data);
-      console.log('First personal image title:', data?.[0]?.title);
       setImages(data || []);
     } catch (error: any) {
       setError(error.message);
@@ -107,7 +105,7 @@ export default function ImageGallery() {
           <div className="aspect-square relative overflow-hidden">
             <img
               src={image.url}
-              alt={image.original_name}
+              alt={image.title || image.original_name || 'Gallery image'}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
             />
             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
@@ -134,9 +132,10 @@ export default function ImageGallery() {
           </div>
           <div className="p-3">
             <p className="text-white text-sm font-medium truncate">
-              {image.original_name}
+              {image.title || 'Untitled'}
             </p>
-            <p className="text-gray-400 text-xs mt-1">
+            
+            <p className="text-gray-500 text-xs mt-1">
               {new Date(image.created_at).toLocaleDateString()}
             </p>
           </div>
