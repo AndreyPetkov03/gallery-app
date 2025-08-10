@@ -45,7 +45,7 @@ export default function ImageDetailModal({ image, onClose, onUserClick }: ImageD
       onClick={onClose}
     >
       <div 
-        className="bg-gray-900 rounded-lg border border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col lg:flex-row"
+        className="bg-gray-900 rounded-lg border border-gray-800 max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col lg:flex-row min-w-0"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Image Section */}
@@ -58,15 +58,15 @@ export default function ImageDetailModal({ image, onClose, onUserClick }: ImageD
         </div>
 
         {/* Details Section */}
-        <div className="w-full lg:w-80 xl:w-96 flex flex-col">
+        <div className="w-full lg:w-80 xl:w-96 flex flex-col min-w-0">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-800">
-            <h2 className="text-lg font-semibold text-white truncate">
-              Image Details
+          <div className="flex items-center justify-between p-4 border-b border-gray-800 min-w-0">
+            <h2 className="text-lg font-semibold text-white truncate pr-2">
+              {image.title || 'Untitled'}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-white p-1 rounded transition-colors"
+              className="text-gray-400 hover:text-white p-1 rounded transition-colors flex-shrink-0"
               title="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,14 +76,7 @@ export default function ImageDetailModal({ image, onClose, onUserClick }: ImageD
           </div>
 
           {/* Content */}
-          <div className="flex-1 p-4 space-y-4 overflow-y-auto">
-            {/* Title */}
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">
-                {image.title || 'Untitled'}
-              </h3>
-            </div>
-
+          <div className="flex-1 p-4 space-y-4 overflow-y-auto min-w-0">
             {/* Creator */}
             <div>
               <label className="text-sm font-medium text-gray-400 block mb-2">
@@ -130,35 +123,11 @@ export default function ImageDetailModal({ image, onClose, onUserClick }: ImageD
                 <label className="text-sm font-medium text-gray-400 block mb-2">
                   Description
                 </label>
-                <p className="text-white leading-relaxed whitespace-pre-wrap">
+                <p className="text-white leading-relaxed whitespace-pre-wrap break-words">
                   {image.description}
                 </p>
               </div>
             )}
-
-            {/* Image Info */}
-            <div className="border-t border-gray-800 pt-4">
-              <label className="text-sm font-medium text-gray-400 block mb-2">
-                Image Information
-              </label>
-              <div className="space-y-1 text-sm">
-                {image.width && image.height && (
-                  <p className="text-gray-300">
-                    <span className="text-gray-400">Dimensions:</span> {image.width} × {image.height}
-                  </p>
-                )}
-                {image.size && (
-                  <p className="text-gray-300">
-                    <span className="text-gray-400">Size:</span> {(image.size / 1024 / 1024).toFixed(2)} MB
-                  </p>
-                )}
-                {image.mime_type && (
-                  <p className="text-gray-300">
-                    <span className="text-gray-400">Type:</span> {image.mime_type}
-                  </p>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>
