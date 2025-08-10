@@ -26,6 +26,8 @@ export default function ImageGallery() {
         throw error;
       }
 
+      console.log('Personal gallery images:', data);
+      console.log('First personal image title:', data?.[0]?.title);
       setImages(data || []);
     } catch (error: any) {
       setError(error.message);

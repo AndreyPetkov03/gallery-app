@@ -25,14 +25,27 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
       const { data, error } = await supabase
         .from('images')
         .select(`
-          *,
-          user:users(
+          id,
+          user_id,
+          filename,
+          original_name,
+          url,
+          size,
+          mime_type,
+          width,
+          height,
+          title,
+          description,
+          created_at,
+          updated_at,
+          user:users!inner(
             id,
             username,
             full_name,
             email,
             avatar_url,
-            created_at
+            created_at,
+            updated_at
           )
         `)
         .order('created_at', { ascending: false });
@@ -40,7 +53,9 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
       if (error) throw error;
 
       console.log('Community images data:', data);
-      setImages(data || []);
+      console.log('First image title:', data?.[0]?.title);
+      console.log('First image description:', data?.[0]?.description);
+      setImages(data as any || []);
     } catch (error: any) {
       console.error('Error fetching community images:', error);
     } finally {
@@ -109,13 +124,13 @@ export default function CommunityGallery({ onUserClick, onUploadClick }: SharedG
                 <div className="aspect-square relative overflow-hidden">
                   <img
                     src={image.url}
-                    alt={image.original_name}
+                    alt={image.title || image.original_name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                     <div className="text-white text-center p-4">
                       <div className="text-sm font-medium mb-1">
-                        {image.original_name}
+                        {image.title || "Untitled"}
                       </div>
                       <div className="text-xs text-gray-300">
                         {new Date(image.created_at).toLocaleDateString()}
