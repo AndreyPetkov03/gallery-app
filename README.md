@@ -265,7 +265,6 @@ gallery-app/
 ### 🔗 Helpful Links
 - [React Documentation](https://react.dev) - Learn React fundamentals
 - [PostgreSQL Docs](https://www.postgresql.org/docs/) - Database management
-- [Vercel Platform](https://vercel.com/docs) - Deployment and hosting
 
 ---
 
@@ -314,42 +313,7 @@ Found a bug? Have a feature request? Please open an issue with:
 
 ---
 
-## 🚀 Deployment
-
-### Deploy on Vercel (Recommended)
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/AndreyPetkov03/gallery-app)
-
-1. **Connect Repository**: Link your GitHub repository to Vercel
-2. **Add Environment Variables**: Configure your Supabase credentials
-3. **Deploy**: Automatic deployment with every push to main branch
-
-### Alternative Platforms
-
-<div align="center">
-
-| Platform | Benefits | Deployment |
-|----------|----------|------------|
-| **Vercel** | Optimized for Next.js, automatic builds | [![Deploy](https://img.shields.io/badge/Deploy-Vercel-black)](https://vercel.com) |
-| **Netlify** | Great for static sites, easy setup | [![Deploy](https://img.shields.io/badge/Deploy-Netlify-00C7B7)](https://netlify.com) |
-| **Railway** | Simple deployment, database included | [![Deploy](https://img.shields.io/badge/Deploy-Railway-0B0D0E)](https://railway.app) |
-
-</div>
-
-### Environment Variables
-
-```env
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-# Optional: Analytics, Monitoring
-NEXT_PUBLIC_GA_ID=your_google_analytics_id
-```
-
----
-
-## 🔧 Development & Scripts
+##  Development
 
 ### Available Commands
 
@@ -361,11 +325,6 @@ npm run start        # Start production server
 
 # Code Quality
 npm run lint         # Run ESLint
-npm run type-check   # TypeScript type checking
-
-# Database
-npm run db:setup     # Initialize Supabase database
-npm run db:reset     # Reset database (development only)
 ```
 
 ### Development Workflow
@@ -374,42 +333,10 @@ npm run db:reset     # Reset database (development only)
 2. **🗄️ Database**: Configure Supabase and run setup script
 3. **💻 Develop**: Start dev server and begin coding
 4. **🧪 Test**: Run linting and type checking
-5. **🚀 Deploy**: Push to GitHub for automatic deployment
 
 ---
 
-## 📚 Learn More
-
-### Documentation
-- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API
-- [Supabase Documentation](https://supabase.com/docs) - Learn about Supabase services
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Learn about Tailwind CSS utilities
-- [TypeScript Documentation](https://www.typescriptlang.org/docs) - Learn about TypeScript
-
-### Related Resources
-- [React Documentation](https://react.dev) - Learn React fundamentals
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/) - Learn about PostgreSQL
-- [Vercel Documentation](https://vercel.com/docs) - Learn about deployment
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push to the branch** (`git push origin feature/AmazingFeature`)
-5. **Open a Pull Request**
-
-### Development Guidelines
-
-- Follow the existing code style and conventions
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
-- Ensure all tests pass before submitting
-
-## 📄 License
+##  License
 
 This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
@@ -439,7 +366,6 @@ Special thanks to the amazing teams and technologies that made this project poss
 | **Next.js** | Revolutionary React framework with App Router |
 | **Supabase** | Complete backend-as-a-service platform |
 | **Tailwind CSS** | Beautiful utility-first CSS framework |
-| **Vercel** | Seamless deployment and hosting platform |
 | **TypeScript** | Enhanced development with static typing |
 
 </div>
