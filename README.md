@@ -348,7 +348,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
   <h3>Andrey Petkov</h3>
   
   [![GitHub](https://img.shields.io/badge/GitHub-@AndreyPetkov03-black?style=for-the-badge&logo=github)](https://github.com/AndreyPetkov03)
-  [![Email](https://img.shields.io/badge/Email-Contact-blue?style=for-the-badge&logo=gmail)](mailto:andrey.petkov@example.com)
+  [![Email](https://img.shields.io/badge/Email-Contact-blue?style=for-the-badge&logo=gmail)](mailto:petkovandrey03@gmail.com)
   
   <p><em>Full-Stack Developer passionate about modern web technologies</em></p>
 </div>
