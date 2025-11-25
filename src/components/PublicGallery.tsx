@@ -60,7 +60,7 @@ export default function PublicGallery() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-black/90 backdrop-blur-sm border-b border-gray-800/50">
+      <header className="bg-gray-900/50 backdrop-blur-sm border-b border-gray-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-2 sm:space-x-3">
